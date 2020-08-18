@@ -1,4 +1,4 @@
 # DioscoreaHerbarium
 Scripts used for analysing data derived from sequencing of leaf glands from Dioscorea sansibarensis from herbarium specimens.
-Scripts containg basic usage information
+All scripts contain basic usage information and requirements
 More info can be obtained from bram.danneels@ugent.be
