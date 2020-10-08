@@ -30,11 +30,6 @@ from sys import argv
 import subprocess as sp
 from Bio import AlignIO
 
-#usage: python whole_genome_align.py orthomcl_out.txt prots.fa nucl.fa 
-#orthomcl_out.txt is a set of one_to_one orthologous genes following the same format as the output of orthomcl v1.2
-#prots.fa is a fasta file of protein sequences for all the genomes used in the orthomcl run. The sequence identifiers have to match the identifiers in orthomcl_out.txt
-#nucl.fa is as prots.fa but with nucleotide sequences. This file is used as the reference for the back translation of the alignments.
-
 script, orthologs, fasta_prot, fasta_nucl = argv
 
 fasta_prot_dict = SeqIO.index(fasta_prot, "fasta")
@@ -55,9 +50,8 @@ def fasta_extract(fasta_dict,IDlist):
 print('Calculating maximum number of taxa...')
 max_taxa = 0   
 for line in open(orthologs):
-    if line.strip() != '':
-        group, genes = line.strip().split(':')
-        genes = genes.split()
+    if line.strip() != '' and not line.startswith("Ortho"):
+        group, *genes = line.strip().split()
         nr_taxa = len(set([gene.split('_')[0] for gene in genes]))
         max_taxa = max(max_taxa, nr_taxa)
 print('Max number of taxa = {}'.format(max_taxa))
@@ -66,10 +60,9 @@ print()
 print('Aligning core genes...')
 align_nucllist = []
 for line in open(orthologs):
-    if line.strip() != '':
+    if line.strip() != '' and not line.startswith("Ortho"):
         species_list = []
-        group, genes = line.strip().split(':')
-        genes = genes.split()
+        group, *genes = line.strip().split()
         nr_taxa = len(set([gene.split('_')[0] for gene in genes]))  
         if max_taxa == nr_taxa and nr_taxa == len(genes):
             for gene in genes:
